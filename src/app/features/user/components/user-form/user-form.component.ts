@@ -56,7 +56,7 @@ export class UserFormComponent implements OnChanges {
     this.form.markAsDirty();
   }
 
-  isInValidForm(): Observable<boolean> {
+  isInvalidForm(): Observable<boolean> {
     return this.form.statusChanges.pipe(
       map(status => status === 'INVALID' || !Boolean(this.formDir.dirty))
     )

@@ -37,7 +37,7 @@ export class UserComponent implements OnInit {
   isFormInvalid = true;
 
   ngAfterViewInit(): void {
-    this.formCmp.isInValidForm().pipe(
+    this.formCmp.isInvalidForm().pipe(
       tap(isFormInvalid => this.isFormInvalid = isFormInvalid),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe()
