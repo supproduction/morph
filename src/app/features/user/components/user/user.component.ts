@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '@features/user/services/user.service';
 import { User } from '@shared/interface/responses';
-import { map, Subject, switchMap, withLatestFrom } from 'rxjs';
+import { map, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { UserFormComponent } from '../user-form/user-form.component';
 
 @Component({
@@ -33,6 +33,15 @@ export class UserComponent implements OnInit {
       id: user.id,
     })),
   )
+
+  isFormInvalid = true;
+
+  ngAfterViewInit(): void {
+    this.formCmp.isInValidForm().pipe(
+      tap(isFormInvalid => this.isFormInvalid = isFormInvalid),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe()
+  }
 
   ngOnInit(): void {
     this.save$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();

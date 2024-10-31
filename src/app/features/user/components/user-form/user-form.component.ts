@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '@shared/interface/responses';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-form',
@@ -53,5 +54,11 @@ export class UserFormComponent implements OnChanges {
   removeItem(index: number) {
     this.form.controls.emails!.removeAt(index);
     this.form.markAsDirty();
+  }
+
+  isInValidForm(): Observable<boolean> {
+    return this.form.statusChanges.pipe(
+      map(status => status === 'INVALID' || !Boolean(this.formDir.dirty))
+    )
   }
 }

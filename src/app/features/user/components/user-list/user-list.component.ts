@@ -16,6 +16,7 @@ export class UserListComponent {
 
   private getList$ = new BehaviorSubject<void>(void 0);
   private disabledId$ = new Subject<string>();
+  private add$ = new Subject<void>();
 
   users$ = this.getList$.pipe(
     switchMap(() => this.usersService.get()),
@@ -32,8 +33,16 @@ export class UserListComponent {
     ),
     this.users$.pipe(map(() => []))
   );
+  adding$ = merge(
+    this.add$.pipe(map(() => true)),
+    this.users$.pipe(map(() => false))
+  );
 
   deleteHandler(id: string) {
     this.disabledId$.next(id);
+  }
+
+  addHandler() {
+    this.add$.next();
   }
 }

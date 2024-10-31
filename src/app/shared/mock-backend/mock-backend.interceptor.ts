@@ -63,12 +63,15 @@ export class MockBackendInterceptor implements HttpInterceptor {
   }
 
   private create(req: HttpRequest<unknown>): Observable<HttpResponse<unknown>> {
-    this.users.unshift({
-      id: new Date().getTime().toString(),
-      ...req.body as Omit<User, 'id'>,
-    });
+    this.users = [
+      {
+        id: new Date().getTime().toString(),
+        ...req.body as Omit<User, 'id'>,
+      },
+      ...this.users
+    ];
 
-    return this.response(null, 1500);
+    return this.response(null, 1000);
   }
 
   private response(data: any, delayValue = 300): Observable<HttpResponse<unknown>> {

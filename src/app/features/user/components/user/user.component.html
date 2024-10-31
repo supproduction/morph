@@ -1,15 +1,9 @@
 <div class="d-flex w-100 gap-5 justify-content-center">
   <a routerLink="/" class="btn btn-outline-secondary"> Back to List </a>
 
-  <button
-    [disabled]="
-      (!form.formDir?.dirty ?? false) || (form.formDir?.invalid ?? true)
-    "
-    (click)="save()"
-    class="btn btn-primary"
-  >
+  <button [disabled]="isFormInvalid" (click)="save()" class="btn btn-primary">
     Save Changes
   </button>
 </div>
 
-<app-user-form [user]="user$ | async" #form></app-user-form>
+<app-user-form [user]="user$ | async"></app-user-form>
