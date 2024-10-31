@@ -1,0 +1,20 @@
+<app-create-user class="mb-3"></app-create-user>
+
+<div class="list-group">
+  @if (initialLoading$ | async) {
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  } @else {
+    @for (user of users$ | async; track user.id) {
+      <app-user-list-item
+        (delete)="deleteHandler($event)"
+        [disabled]="(disabledIds$ | async)?.includes(user.id)"
+        [user]="user"
+        class="list-group-item"
+      />
+    } @empty {
+      <div>There are no users.</div>
+    }
+  }
+</div>

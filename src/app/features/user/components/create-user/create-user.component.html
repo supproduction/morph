@@ -1,0 +1,23 @@
+<app-modal (closed)="form.formDir?.resetForm()" #modal title="Add new user">
+  <button trigger class="btn btn-primary mb-3">Add new user</button>
+
+  <app-user-form #form></app-user-form>
+
+  <div footer class="d-flex w-100 gap-5 justify-content-center">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.close()"
+    >
+      Cancel
+    </button>
+
+    <button
+      [disabled]="form.formDir?.invalid ?? true"
+      (click)="create()"
+      class="btn btn-primary"
+    >
+      Create
+    </button>
+  </div>
+</app-modal>
