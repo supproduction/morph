@@ -5,22 +5,29 @@ import { User } from '../interface/responses';
 
 @Injectable()
 export class MockBackendInterceptor implements HttpInterceptor {
-  private users: User[] = [
-    {
-      id: 'mockUserA',
-      name: 'Mock User A',
-      email: 'mock-user-a@mock.com',
-    },
-    {
-      id: 'mockUserB',
-      name: 'Mock User B',
-      email: 'mock-user-b@mock.com',
-      emails: [
-        '1mock-user-b@mock.com',
-        '2mock-user-b@mock.com',
-      ]
-    }
-  ];
+  private users: Map<string, User> = new Map([
+    [
+      'mockUserA',
+      {
+        id: 'mockUserA',
+        name: 'Mock User A',
+        email: 'mock-user-a@mock.com',
+      }
+    ],
+    [
+      'mockUserB',
+      {
+        id: 'mockUserB',
+        name: 'Mock User B',
+        email: 'mock-user-b@mock.com',
+        emails: [
+          '1mock-user-b@mock.com',
+          '2mock-user-b@mock.com',
+        ]
+      }
+    ]
+  ])
+
   private responses: Record<string, (req: HttpRequest<unknown>) => Observable<HttpResponse<unknown>>> = {
     'create-user': this.create,
     'get-user': this.get,
@@ -36,14 +43,13 @@ export class MockBackendInterceptor implements HttpInterceptor {
   }
 
   private getList(req: HttpRequest<unknown>): Observable<HttpResponse<unknown>> {
-    return this.response(this.users, 1500);
+    return this.response([...this.users.values()].reverse(), 1500);
   }
 
   private edit(req: HttpRequest<unknown>): Observable<HttpResponse<unknown>> {
     const user = req.body as User;
-    const index = this.users.findIndex(_user => _user.id == user.id);
 
-    this.users[index] = user;
+    this.users.set(user.id, user);
 
     return this.response(null, 500);
   }
@@ -51,7 +57,7 @@ export class MockBackendInterceptor implements HttpInterceptor {
   private delete(req: HttpRequest<unknown>): Observable<HttpResponse<unknown>> {
     const id = this.getId(req);
 
-    this.users = this.users.filter(user => user.id !== id)
+    this.users.delete(id);
 
     return this.response(null, 100);
   }
@@ -59,17 +65,13 @@ export class MockBackendInterceptor implements HttpInterceptor {
   private get(req: HttpRequest<unknown>): Observable<HttpResponse<unknown>> {
     const id = this.getId(req);
 
-    return this.response(this.users.find(user => user.id === id), 400);
+    return this.response(this.users.get(id), 400);
   }
 
   private create(req: HttpRequest<unknown>): Observable<HttpResponse<unknown>> {
-    this.users = [
-      {
-        id: new Date().getTime().toString(),
-        ...req.body as Omit<User, 'id'>,
-      },
-      ...this.users
-    ];
+    const id = new Date().getTime().toString();
+
+    this.users.set(id, { id, ...req.body as Omit<User, 'id'> })
 
     return this.response(null, 1000);
   }
