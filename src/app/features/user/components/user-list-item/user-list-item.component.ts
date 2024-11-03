@@ -1,10 +1,10 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UserService } from '@features/user/services/user.service';
 import { User } from '@shared/interface/responses';
-import { finalize, take } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-user-list-item',
@@ -16,8 +16,6 @@ import { finalize, take } from 'rxjs';
 })
 export class UserListItemComponent {
   @Input() user!: User;
-  @Input() disabled?: boolean;
-  @Output() delete = new EventEmitter<string>();
 
   private clipboard = inject(Clipboard);
   private userService = inject(UserService);
@@ -30,9 +28,6 @@ export class UserListItemComponent {
   }
 
   deleteHandler(id: string) {
-    this.userService.delete(id).pipe(
-      take(1),
-      finalize(() => this.delete.emit(id)),
-    ).subscribe();
+    this.userService.delete(id).pipe(take(1)).subscribe();
   }
 }

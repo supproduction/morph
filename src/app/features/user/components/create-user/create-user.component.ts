@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, DestroyRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, inject, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService } from '@features/user/services/user.service';
 import { ModalComponent } from '@shared/components/modal/modal.component';
@@ -14,10 +14,6 @@ import { UserFormComponent } from '../user-form/user-form.component';
   templateUrl: './create-user.component.html',
 })
 export class CreateUserComponent implements AfterViewInit {
-  @Input() loading?: boolean | null;
-
-  @Output() add = new EventEmitter<void>();
-
   @ViewChild(UserFormComponent) formCmp!: UserFormComponent;
   @ViewChild(ModalComponent) modal!: ModalComponent;
 
@@ -48,7 +44,6 @@ export class CreateUserComponent implements AfterViewInit {
     this.triggerAdd$.next();
     this.reset();
     this.modal.close();
-    this.add.emit();
   }
 
   reset() {

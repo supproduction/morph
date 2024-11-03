@@ -29,7 +29,7 @@ export class UserService {
     )
   }
 
-  create(user: Omit<User, 'id'>): Observable<null> {
+  create(user: Omit<User, 'id'>): Observable<any> {
     this.loading$.next(true);
 
     return this.http.put<null>('create-user', this.prepareData(user)).pipe(

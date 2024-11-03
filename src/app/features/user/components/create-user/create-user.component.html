@@ -2,7 +2,7 @@
   <div trigger class="d-flex gap-2">
     <button class="btn btn-primary mb-3">Add new user</button>
 
-    @if (loading || (adding$ | async)) {
+    @if (adding$ | async) {
       <div class="spinner-border text-secondary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
