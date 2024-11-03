@@ -1,13 +1,17 @@
 <app-modal (closed)="reset()" #modal title="Add new user">
-  <div trigger class="d-flex gap-2">
-    <button class="btn btn-primary mb-3">Add new user</button>
+  <ng-template #footer let-modal let-open="open">
+    <div trigger class="d-flex gap-2">
+      <button (click)="open(modal)" class="btn btn-primary mb-3">
+        Add new user
+      </button>
 
-    @if (adding$ | async) {
-      <div class="spinner-border text-secondary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    }
-  </div>
+      @if (adding$ | async) {
+        <div class="spinner-border text-secondary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      }
+    </div>
+  </ng-template>
 
   <app-user-form></app-user-form>
 

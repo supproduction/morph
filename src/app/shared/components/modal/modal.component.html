@@ -19,6 +19,9 @@
   </div>
 </ng-template>
 
-<span (click)="open(modal)">
-  <ng-content select="[trigger]"></ng-content>
-</span>
+<ng-container
+  *ngTemplateOutlet="
+    trigger;
+    context: { $implicit: modal, open: open.bind(this) }
+  "
+></ng-container>
