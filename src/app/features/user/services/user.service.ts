@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '@shared/interface/responses';
-import { finalize, Observable, shareReplay, Subject, switchMap } from 'rxjs';
+import { finalize, Observable, Subject, switchMap } from 'rxjs';
 import { UsersService } from './users.service';
 
 @Injectable()
@@ -48,9 +48,7 @@ export class UserService {
   }
 
   getLoading(): Observable<boolean> {
-    return this.loading$.asObservable().pipe(
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
+    return this.loading$.asObservable();
   }
 
   private prepareData(data: Partial<User>): Partial<User> {
