@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '@shared/interface/responses';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, merge, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-form',
@@ -14,6 +14,7 @@ export class UserFormComponent implements OnChanges {
   @Input() user?: User | null;
 
   private fb = inject(FormBuilder);
+  private emailRemoved$ = new BehaviorSubject<void>(void 0);
 
   @ViewChild(FormGroupDirective)
   formDir!: FormGroupDirective;
@@ -54,10 +55,12 @@ export class UserFormComponent implements OnChanges {
   removeItem(index: number) {
     this.form.controls.emails!.removeAt(index);
     this.form.markAsDirty();
+    this.emailRemoved$.next();
   }
 
   isInvalidForm(): Observable<boolean> {
-    return this.form.statusChanges.pipe(
+
+    return merge(this.emailRemoved$, this.form.statusChanges).pipe(
       map(status => status === 'INVALID' || !Boolean(this.formDir.dirty))
     )
   }
