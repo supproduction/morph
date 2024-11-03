@@ -59,7 +59,6 @@ export class UserFormComponent implements OnChanges {
   }
 
   isInvalidForm(): Observable<boolean> {
-
     return merge(this.emailRemoved$, this.form.statusChanges).pipe(
       map(status => status === 'INVALID' || !Boolean(this.formDir.dirty))
     )
