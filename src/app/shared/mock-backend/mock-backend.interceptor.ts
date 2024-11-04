@@ -1,6 +1,6 @@
 import { HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from "@angular/core";
-import { delay, Observable, of } from "rxjs";
+import { delay, Observable, of, throwError } from "rxjs";
 import { User } from '../interface/responses';
 
 @Injectable()
@@ -64,6 +64,10 @@ export class MockBackendInterceptor implements HttpInterceptor {
 
   private get(req: HttpRequest<unknown>): Observable<HttpResponse<unknown>> {
     const id = this.getId(req);
+
+    if (!this.users.has(id)) {
+      return throwError(() => new Error('User not found'));
+    }
 
     return this.response(this.users.get(id), 400);
   }
